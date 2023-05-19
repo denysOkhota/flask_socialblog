@@ -1,0 +1,52 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="container">
+    <h1>{{ user.username }}'s Posts</h1>
+
+    {% for post in posts.items %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h2 class="card-title">{{ post.title }}</h2>
+          <p class="card-text">{{ post.body }}</p>
+          <p class="card-text">Published on: {{ post.date }}</p>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div>
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          {% if posts.has_prev %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('users.user_posts', username=user.username, page=posts.prev_num) }}">Previous</a>
+            </li>
+          {% endif %}
+
+          {% for num in posts.iter_pages() %}
+            {% if num %}
+              {% if num == posts.page %}
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a class="page-link" href="{{ url_for('users.user_posts', username=user.username, page=num) }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link">&hellip;</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if posts.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('users.user_posts', username=user.username, page=posts.next_num) }}">Next</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+{%endblock%}
